@@ -20,7 +20,7 @@ export class CadastroPage implements OnInit {
     private firebaseService: FirebaseService,
     private nav: NavegacaoService,
     public alertController: AlertController,
-    private toast: ToastService
+    private toast: ToastService,
   ) {}
 
   ngOnInit() {}
@@ -28,23 +28,32 @@ export class CadastroPage implements OnInit {
   public realizarCadastro() {
     console.log(this.senha1, this.senha2);
 
-    if (this.senha1 != this.senha2) {
-      this.toast.showToast('Senhas não conferem!');
-    }
-
-    if (
-      !!this.user.nome &&
-      !!this.user.email &&
-      !!this.user.cep &&
-      !!this.user.cpf &&
-      !!this.user.cidade &&
-      !!this.user.endereco
-    ) {
-      this.firebaseService.signUp(this.user, this.senha1);
+    if (this.senha1 == this.senha2) {
+      if (!!this.user.nome && !!this.user.email && !!this.user.cep && !!this.user.cpf && !!this.user.cidade && !!this.user.endereco) {
+        this.user.nome = this.user.nome
+          .split(' ')
+          .map((name) => {
+            return name[0].toUpperCase() + name.substring(1).toLowerCase();
+          })
+          .join(' ');
+        let resp = this.firebaseService
+          .signUp(this.user, this.senha1)
+          .then(() => {
+            if (resp != null) {
+              console.log('cadastrou');
+              this.nav.navegarPara('home')
+            }
+          })
+          .catch(() => {
+            this.toast.showToast('Erro ao cadastrar!');
+          });
+      } else {
+        this.toast.showToast(
+          'Cadastro não realizado, está faltando informações!'
+        );
+      }
     } else {
-      this.toast.showToast(
-        'Cadastro não realizado, está faltando informações!'
-      );
+      this.toast.showToast('Conflito entre as senhas digitadas!');
     }
   }
 }

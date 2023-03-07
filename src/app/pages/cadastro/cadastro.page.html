@@ -7,16 +7,9 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="content-basico">
-  <div class="container-imagem">
-    <ion-img class="img-logo" src="../../../assets/icon/logo.png"></ion-img>
-  </div>
 
   <div class="container-login">
     <h1 class="titulo-login-cad">Cadastre-se</h1>
-
-    <ion-input class="input-login-cad" placeholder="Foto do usuário">
-      <ion-icon class="icon-login-cad" name="camera" slot="start"></ion-icon>
-    </ion-input>
 
     <ion-input
       [(ngModel)]="user.nome"
@@ -33,7 +26,6 @@
     <ion-input [(ngModel)]="user.cep" class="input-login-cad" placeholder="CEP">
       <ion-icon class="icon-login-cad" name="location" slot="start"></ion-icon>
     </ion-input>
-
     <ion-input
     [(ngModel)]="user.endereco"
     class="input-login-cad"
