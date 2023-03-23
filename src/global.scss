@@ -16,7 +16,7 @@
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
 @import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
+@import "~@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "~@ionic/angular/css/padding.css";
@@ -26,7 +26,11 @@
 @import "~@ionic/angular/css/flex-utils.css";
 
 .content-basico {
-  --background: linear-gradient(180deg, #a0a0a0 40.61%, rgba(173, 173, 173, 0.692) 116.69%);;
+  --background: linear-gradient(
+    180deg,
+    #47436d 40.61%,
+    rgba(4, 5, 102, 0.692) 116.69%
+  );
   --background-size: cover;
   z-index: 5;
   position: sticky;
@@ -41,11 +45,11 @@
   position: relative;
 }
 
-.toolbar-basico{
-    --background: #256A2F;
-    color: #ffffff;
-    font-size: 22px;
-    text-align: center;
+.toolbar-basico {
+  --background: #256a2f;
+  color: #ffffff;
+  font-size: 22px;
+  text-align: center;
 }
 
 .div-superior {
@@ -70,7 +74,7 @@ ion-back-button {
 .input-login-cad {
   font-weight: 400;
   font-size: 17px;
-  background-color:#FFFFFF;
+  background-color: #ffffff;
   border-radius: 20px;
   color: #000000;
   margin-bottom: 15px;
@@ -106,33 +110,33 @@ ion-back-button {
   margin-right: auto;
 }
 
-.input{
-    --placeholder-color: rgb(36, 35, 35);
-    --placeholder-opacity: 0.85;
-    background: #C4C4C4;
-    border-radius: 80px;
-    width: 85%;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid black;
-    margin-bottom: 3%;
-    margin-top: 0.5%;
-    --padding-start: 3%
+.input {
+  --placeholder-color: rgb(36, 35, 35);
+  --placeholder-opacity: 0.85;
+  background: #c4c4c4;
+  border-radius: 80px;
+  width: 85%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+  margin-bottom: 3%;
+  margin-top: 0.5%;
+  --padding-start: 3%;
 }
 
-.input-area{
-    --placeholder-color: rgb(36, 35, 35);
-    --placeholder-opacity: 0.85;
-    --background: #C4C4C4;
-    border-radius: 10px;
-    width: 85%;
-    min-height: 50px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid black;
-    margin-bottom: 3%;
+.input-area {
+  --placeholder-color: rgb(36, 35, 35);
+  --placeholder-opacity: 0.85;
+  --background: #c4c4c4;
+  border-radius: 10px;
+  width: 85%;
+  min-height: 50px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+  margin-bottom: 3%;
 }
 
 .button-salvar {
@@ -169,29 +173,29 @@ ion-back-button {
   padding-top: 4.5%;
 }
 
-.native-textarea.sc-ion-textarea-md{
-    padding-bottom: 4.5%;
-    padding-top: 4.5%;
+.native-textarea.sc-ion-textarea-md {
+  padding-bottom: 4.5%;
+  padding-top: 4.5%;
 }
 
 .texto_tolbar {
-    z-index: 2;
+  z-index: 2;
 
-    margin-right: 10%;
-    width: 85%;
+  margin-right: 10%;
+  width: 85%;
 
-    display: block;
-    text-align: center;
-    position: relative;
-    //background-color: yellowgreen;
+  display: block;
+  text-align: center;
+  position: relative;
+  //background-color: yellowgreen;
+}
+
+@media (min-width: 450px) {
+  .texto_tolbar {
+    margin-right: 5%;
+    width: 90%;
+    //background-color: cyan;
   }
-
-  @media (min-width: 450px) {
-    .texto_tolbar {
-      margin-right: 5%;
-      width: 90%;
-      //background-color: cyan;
-    }
 }
 //comando para quando a tela tiver mais que 450px de largura
 @media (min-width: 450px) {

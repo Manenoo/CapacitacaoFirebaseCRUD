@@ -10,18 +10,21 @@
     <h2 class="container-user">Usuários</h2>
 
     <div *ngIf="segmentChange == 'visualizar'">
-      <ion-list>
+      <ion-list class="list-styles">
         <ion-item>
           <ion-label><b>Nome</b></ion-label>
           <ion-label><b>CPF</b></ion-label>
         </ion-item>
-        <ion-item
-          *ngFor="let user of userVetor; let i=index">
-          <ion-label>{{user.nome}}</ion-label>
-          <ion-label>{{user.cpf}}</ion-label>
+        <ion-item *ngFor="let user of userVetor; let i=index">
+          <ion-label (click)="alertComum()">{{user.nome}}</ion-label>
+          <ion-label (click)="alertComum()">{{user.cpf}}</ion-label>
         </ion-item>
       </ion-list>
     </div>
-
   </div>
+  <ion-fab vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="alertCreate()">
+      <ion-icon name="create"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

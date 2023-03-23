@@ -4,7 +4,11 @@ import { User } from 'src/app/interfaces/user';
 import { Component } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AlertController, ToastController } from '@ionic/angular';
+import {
+  ActionSheetController,
+  AlertController,
+  ToastController,
+} from '@ionic/angular';
 import { alertController } from '@ionic/core';
 
 @Component({
@@ -15,13 +19,15 @@ import { alertController } from '@ionic/core';
 export class HomePage {
   userVetor: User[] = [];
   segmentChange: String = 'visualizar';
+  message = 'Aqui tem que ficar a lista de atributos';
 
   constructor(
     private fireStore: AngularFirestore,
     private alertCtrl: AlertController,
     private auth: AngularFireAuth,
     private firebaseService: FirebaseService,
-    private toast: ToastService
+    private toast: ToastService,
+    private actionSheetCtrl: ActionSheetController
   ) {
     this.getUserData();
   }
@@ -45,4 +51,61 @@ export class HomePage {
     });
   }
 
+  async alertComum() {
+    const alert = await this.alertCtrl.create({
+      header: 'Usuário',
+      message: this.message,
+
+      buttons: [
+        {
+          text: 'Editar',
+          cssClass: 'alert-button-confirm',
+        },
+        {
+          text: 'Excluir',
+          cssClass: 'alert-button-confirm',
+        },
+        {
+          text: 'Cancelar',
+          cssClass: 'alert-button-cancel',
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async alertCreate() {
+    const alert = await this.alertCtrl.create({
+      header: 'Insira as informações',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'OK',
+          role: 'confirm',
+        },
+      ],
+      inputs: [
+        {
+          placeholder: 'Nome',
+        },
+        {
+          placeholder: 'CPF',
+          attributes: {
+            maxlength: 11,
+          },
+        },
+        {
+          placeholder: 'Cidade',
+        },
+        {
+          placeholder: 'Rua',
+        },
+      ],
+    });
+    await alert.present();
+  }
 }
