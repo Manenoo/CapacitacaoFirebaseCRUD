@@ -19,7 +19,6 @@ import { alertController } from '@ionic/core';
 export class HomePage {
   userVetor: User[] = [];
   segmentChange: String = 'visualizar';
-  message = 'Aqui tem que ficar a lista de atributos';
 
   constructor(
     private fireStore: AngularFirestore,
@@ -54,12 +53,12 @@ export class HomePage {
   async alertComum() {
     const alert = await this.alertCtrl.create({
       header: 'Usuário',
-      message: this.message,
-
+      message: 'hey',
       buttons: [
         {
           text: 'Editar',
           cssClass: 'alert-button-confirm',
+          handler: () => {},
         },
         {
           text: 'Excluir',
@@ -91,6 +90,41 @@ export class HomePage {
       inputs: [
         {
           placeholder: 'Nome',
+        },
+        {
+          placeholder: 'CPF',
+          attributes: {
+            maxlength: 11,
+          },
+        },
+        {
+          placeholder: 'Cidade',
+        },
+        {
+          placeholder: 'Rua',
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  async alertEditar() {
+    const alert = await this.alertCtrl.create({
+      header: 'Insira as informações',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'OK',
+          role: 'confirm',
+        },
+      ],
+      inputs: [
+        {
+          placeholder: 'Nome',
+          value: 'texto',
         },
         {
           placeholder: 'CPF',

@@ -8,8 +8,9 @@
 }
 
 .img-logo {
-  width: 30%;
-  margin: auto;
+  width: 35%;
+  display: block; /* define a imagem como um bloco */
+  margin: 0 auto; /* define margens automáticas para centralizar */
 }
 
 .container-imagem {
@@ -27,7 +28,6 @@
 }
 
 ion-fab-button {
-  --border-radius: 15px;
   --color: rgba(4, 5, 102, 0.692);
   --background: #ffffff;
 }
