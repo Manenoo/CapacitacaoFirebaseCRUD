@@ -17,8 +17,11 @@ import { alertController } from '@ionic/core';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
+  user = {} as User;
   userVetor: User[] = [];
   segmentChange: String = 'visualizar';
+
+  mensagem: String = 'Lista de nomes:\nEduardo\nMaria\nJosé';
 
   constructor(
     private fireStore: AngularFirestore,
@@ -53,16 +56,21 @@ export class HomePage {
   async alertComum() {
     const alert = await this.alertCtrl.create({
       header: 'Usuário',
-      message: 'hey',
+      message: 'mensagem',
       buttons: [
         {
           text: 'Editar',
           cssClass: 'alert-button-confirm',
-          handler: () => {},
+          handler: () => {
+            this.alertEditar();
+          },
         },
         {
           text: 'Excluir',
           cssClass: 'alert-button-confirm',
+          handler: () => {
+            this.alertExcluir();
+          },
         },
         {
           text: 'Cancelar',
@@ -83,7 +91,7 @@ export class HomePage {
           role: 'cancel',
         },
         {
-          text: 'OK',
+          text: 'Criar',
           role: 'confirm',
         },
       ],
@@ -98,10 +106,16 @@ export class HomePage {
           },
         },
         {
+          placeholder: 'CEP',
+        },
+        {
           placeholder: 'Cidade',
         },
         {
-          placeholder: 'Rua',
+          placeholder: 'Endereço',
+        },
+        {
+          placeholder: 'Email',
         },
       ],
     });
@@ -110,36 +124,74 @@ export class HomePage {
 
   async alertEditar() {
     const alert = await this.alertCtrl.create({
-      header: 'Insira as informações',
+      header: 'Edite as informações',
       buttons: [
         {
           text: 'Cancelar',
           role: 'cancel',
         },
         {
-          text: 'OK',
+          text: 'Editar',
           role: 'confirm',
+          handler: () => {
+            //funcao para sobrescrever
+          },
         },
       ],
       inputs: [
         {
           placeholder: 'Nome',
-          value: 'texto',
+          value: 'Nome do Usuario',
         },
         {
           placeholder: 'CPF',
           attributes: {
             maxlength: 11,
           },
+          value: '22222222222',
+        },
+        {
+          placeholder: 'CEP',
+          attributes: {
+            maxlength: 8,
+          },
+          value: '4444444',
         },
         {
           placeholder: 'Cidade',
+          value: 'Gotham City',
         },
         {
-          placeholder: 'Rua',
+          placeholder: 'Endereço',
+          value: 'Rua das Flores',
+        },
+        {
+          placeholder: 'Email',
+          value: 'usuario@gmail.com',
         },
       ],
     });
+    await alert.present();
+  }
+
+  async alertExcluir() {
+    const alert = await this.alertCtrl.create({
+      header: 'Tem certeza disso?',
+      buttons: [
+        {
+          text: 'Sim',
+          cssClass: 'alert-button-confirm',
+          handler: () => {
+            //funcao para excluir do banco
+          },
+        },
+        {
+          text: 'Não',
+          cssClass: 'alert-button-cancel',
+        },
+      ],
+    });
+
     await alert.present();
   }
 }

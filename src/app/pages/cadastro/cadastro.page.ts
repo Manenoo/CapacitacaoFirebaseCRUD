@@ -20,7 +20,7 @@ export class CadastroPage implements OnInit {
     private firebaseService: FirebaseService,
     private nav: NavegacaoService,
     public alertController: AlertController,
-    private toast: ToastService,
+    private toast: ToastService
   ) {}
 
   ngOnInit() {}
@@ -29,7 +29,14 @@ export class CadastroPage implements OnInit {
     console.log(this.senha1, this.senha2);
 
     if (this.senha1 == this.senha2) {
-      if (!!this.user.nome && !!this.user.email && !!this.user.cep && !!this.user.cpf && !!this.user.cidade && !!this.user.endereco) {
+      if (
+        !!this.user.nome &&
+        !!this.user.email &&
+        !!this.user.cep &&
+        !!this.user.cpf &&
+        !!this.user.cidade &&
+        !!this.user.endereco
+      ) {
         this.user.nome = this.user.nome
           .split(' ')
           .map((name) => {
@@ -41,7 +48,7 @@ export class CadastroPage implements OnInit {
           .then(() => {
             if (resp != null) {
               console.log('cadastrou');
-              this.nav.navegarPara('home')
+              this.nav.navegarPara('home');
             }
           })
           .catch(() => {
