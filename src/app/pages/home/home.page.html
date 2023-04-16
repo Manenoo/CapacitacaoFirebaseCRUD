@@ -17,8 +17,8 @@
           <ion-label><b>CPF</b></ion-label>
         </ion-item>
         <ion-item *ngFor="let user of userVetor; let i=index">
-          <ion-label (click)="alertComum()">{{user.nome}}</ion-label>
-          <ion-label (click)="alertComum()">{{user.cpf}}</ion-label>
+          <ion-label (click)="alertComum(i)">{{user.nome}}</ion-label>
+          <ion-label (click)="alertComum(i)">{{user.cpf}}</ion-label>
         </ion-item>
       </ion-list>
     </div>

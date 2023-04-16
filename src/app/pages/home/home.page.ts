@@ -21,7 +21,7 @@ export class HomePage {
   userVetor: User[] = [];
   segmentChange: String = 'visualizar';
 
-  mensagem: String = 'Lista de nomes:\nEduardo\nMaria\nJosé';
+  msg: String = '';
 
   constructor(
     private fireStore: AngularFirestore,
@@ -52,11 +52,30 @@ export class HomePage {
       console.log(this.userVetor);
     });
   }
+  async addProdutoFirestore(): Promise<void> {
+    const produtoId = await this.fireStore.collection('user').add(this.user);
+  }
 
-  async alertComum() {
+  async alertComum(index: number) {
+    this.user = this.userVetor[index];
+    this.msg =
+      'CPF: ' +
+      this.user.cpf +
+      '\n' +
+      'CEP: ' +
+      this.user.cep +
+      '\n' +
+      'Cidade: ' +
+      this.user.cidade +
+      '\n' +
+      'Endereço: ' +
+      this.user.endereco +
+      '\n' +
+      'email: ' +
+      this.user.email;
     const alert = await this.alertCtrl.create({
-      header: 'Usuário',
-      message: 'mensagem',
+      header: this.user.nome,
+      message: this.msg + ' ',
       buttons: [
         {
           text: 'Editar',
@@ -69,7 +88,7 @@ export class HomePage {
           text: 'Excluir',
           cssClass: 'alert-button-confirm',
           handler: () => {
-            this.alertExcluir();
+            this.alertExcluir(this.user);
           },
         },
         {
@@ -93,28 +112,40 @@ export class HomePage {
         {
           text: 'Criar',
           role: 'confirm',
+          handler: (data) => {
+            this.adicionaDados(this.user, data);
+          },
         },
       ],
       inputs: [
         {
+          name: 'nome',
           placeholder: 'Nome',
         },
         {
+          name: 'cpf',
           placeholder: 'CPF',
           attributes: {
             maxlength: 11,
           },
         },
         {
+          name: 'cep',
           placeholder: 'CEP',
+          attributes: {
+            maxlength: 8,
+          },
         },
         {
+          name: 'cidade',
           placeholder: 'Cidade',
         },
         {
+          name: 'endereco',
           placeholder: 'Endereço',
         },
         {
+          name: 'email',
           placeholder: 'Email',
         },
       ],
@@ -133,48 +164,54 @@ export class HomePage {
         {
           text: 'Editar',
           role: 'confirm',
-          handler: () => {
-            //funcao para sobrescrever
+          handler: (data) => {
+            this.atualizaDados(data);
           },
         },
       ],
       inputs: [
         {
+          name: 'nome',
           placeholder: 'Nome',
-          value: 'Nome do Usuario',
+          value: this.user.nome,
         },
         {
+          name: 'cpf',
           placeholder: 'CPF',
           attributes: {
             maxlength: 11,
           },
-          value: '22222222222',
+          value: this.user.cpf,
         },
         {
+          name: 'cep',
           placeholder: 'CEP',
           attributes: {
             maxlength: 8,
           },
-          value: '4444444',
+          value: this.user.cep,
         },
         {
+          name: 'cidade',
           placeholder: 'Cidade',
-          value: 'Gotham City',
+          value: this.user.cidade,
         },
         {
+          name: 'endereco',
           placeholder: 'Endereço',
-          value: 'Rua das Flores',
+          value: this.user.endereco,
         },
         {
+          name: 'email',
           placeholder: 'Email',
-          value: 'usuario@gmail.com',
+          value: this.user.email,
         },
       ],
     });
     await alert.present();
   }
 
-  async alertExcluir() {
+  async alertExcluir(usuario: User) {
     const alert = await this.alertCtrl.create({
       header: 'Tem certeza disso?',
       buttons: [
@@ -182,7 +219,7 @@ export class HomePage {
           text: 'Sim',
           cssClass: 'alert-button-confirm',
           handler: () => {
-            //funcao para excluir do banco
+            this.deletaDados(usuario);
           },
         },
         {
@@ -193,5 +230,38 @@ export class HomePage {
     });
 
     await alert.present();
+  }
+  async adicionaDados(user: User, data: User) {
+    user = data;
+    const collectionRef = this.fireStore.collection('users');
+    const newDocumentRef = this.fireStore.collection('users').add(user);
+
+    newDocumentRef.then((docRef) => {
+      const newDocumentId = docRef.id;
+
+      // atualize o UID do documento com o ID gerado pelo Firebase
+      const updatedData = { ...data, uid: newDocumentId };
+
+      // atualize o documento com o UID atualizado
+      const updatedDocumentRef = collectionRef
+        .doc(newDocumentId)
+        .set(updatedData);
+
+      // verifique se o documento foi adicionado com sucesso e obtenha o UID
+      updatedDocumentRef.then(() =>
+        console.log(
+          `Novo documento adicionado com sucesso! UID: ${newDocumentId}`
+        )
+      );
+    });
+  }
+
+  async atualizaDados(novosDados: User) {
+    novosDados.uid = this.user.uid;
+    this.fireStore.collection('users').doc(this.user.uid).set(novosDados);
+  }
+
+  async deletaDados(usuario: User) {
+    await this.fireStore.collection('users').doc(usuario.uid).delete();
   }
 }
