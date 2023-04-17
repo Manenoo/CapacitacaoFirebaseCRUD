@@ -18,6 +18,7 @@ import { BuscaCEPService } from 'src/app/services/busca-cep.service';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
+  newData = {} as User;
   cep: string = '';
   endCol = {};
   user = {} as User;
@@ -62,7 +63,7 @@ export class HomePage {
     this.user = this.userVetor[index];
     const alert = await this.alertCtrl.create({
       header: this.user.nome,
-      subHeader: 'Informações do usuário:',
+      subHeader: 'Informações do usuário',
       message: `<ul><li> CPF: ${this.user.cpf} </li><p></p><li> CEP: ${this.user.cep} </li><p></p><li> Cidade: ${this.user.cidade} </li><p></p><li> Endereço: ${this.user.endereco} </li><p></p><li> Email: ${this.user.email} </li></ul>`,
 
       buttons: [
@@ -102,9 +103,8 @@ export class HomePage {
           text: 'Criar',
           role: 'confirm',
           handler: (data) => {
-            this.adicionaEndereco(data);
-            console.log(data.endereco, data.cidade);
-            this.adicionaDados(this.user, data);
+            this.user = data;
+            this.adicionaDados(data);
           },
         },
       ],
@@ -156,7 +156,8 @@ export class HomePage {
           text: 'Editar',
           role: 'confirm',
           handler: (data) => {
-            this.atualizaDados(data);
+            this.newData = data;
+            this.atualizaDados();
           },
         },
       ],
@@ -222,10 +223,13 @@ export class HomePage {
 
     await alert.present();
   }
-  async adicionaDados(user: User, data: User) {
-    user = data;
+  async adicionaDados(data: User) {
+    this.user = data;
+    const enderecoColocado = await this.buscaCep.consultaCEP(this.user.cep);
+    this.user.endereco = enderecoColocado.logradouro;
+    this.user.cidade = enderecoColocado.localidade;
     const collectionRef = this.fireStore.collection('users');
-    const newDocumentRef = this.fireStore.collection('users').add(user);
+    const newDocumentRef = this.fireStore.collection('users').add(this.user);
 
     newDocumentRef.then((docRef) => {
       const newDocumentId = docRef.id;
@@ -247,22 +251,25 @@ export class HomePage {
     });
   }
 
-  async atualizaDados(novosDados: User) {
-    novosDados.uid = this.user.uid;
-    this.adicionaEndereco(novosDados);
-    console.log(novosDados.cidade, novosDados.endereco);
-    this.fireStore.collection('users').doc(this.user.uid).set(novosDados);
+  async atualizaDados() {
+    this.newData.uid = this.user.uid;
+    const enderecoColocado = await this.buscaCep.consultaCEP(this.newData.cep);
+    this.newData.endereco = enderecoColocado.logradouro;
+    this.newData.cidade = enderecoColocado.localidade;
+    this.fireStore.collection('users').doc(this.user.uid).set(this.newData);
+    console.log(this.newData.cidade, this.newData.endereco);
   }
 
   async deletaDados(usuario: User) {
     await this.fireStore.collection('users').doc(usuario.uid).delete();
   }
 
-  async verificaCep(cep: string) {
-    let enderecoColocado = {};
-    console.log(cep);
-    enderecoColocado = await this.buscaCep.consultaCEP(cep);
-    console.log(enderecoColocado);
+  async adicionaEndereco2() {
+    console.log(this.newData);
+    const enderecoColocado = await this.buscaCep.consultaCEP(this.newData.cep);
+    this.newData.endereco = enderecoColocado.logradouro;
+    this.newData.cidade = enderecoColocado.localidade;
+    console.log(this.newData.cidade, this.newData.endereco);
   }
 
   async adicionaEndereco(data: User) {
