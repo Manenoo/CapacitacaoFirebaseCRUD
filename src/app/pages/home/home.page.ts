@@ -10,6 +10,7 @@ import {
   ToastController,
 } from '@ionic/angular';
 import { alertController } from '@ionic/core';
+import { BuscaCEPService } from 'src/app/services/busca-cep.service';
 
 @Component({
   selector: 'app-home',
@@ -17,11 +18,11 @@ import { alertController } from '@ionic/core';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
+  cep: string = '';
+  endCol = {};
   user = {} as User;
   userVetor: User[] = [];
   segmentChange: String = 'visualizar';
-
-  msg: String = '';
 
   constructor(
     private fireStore: AngularFirestore,
@@ -29,7 +30,8 @@ export class HomePage {
     private auth: AngularFireAuth,
     private firebaseService: FirebaseService,
     private toast: ToastService,
-    private actionSheetCtrl: ActionSheetController
+    private actionSheetCtrl: ActionSheetController,
+    private buscaCep: BuscaCEPService
   ) {
     this.getUserData();
   }
@@ -58,24 +60,11 @@ export class HomePage {
 
   async alertComum(index: number) {
     this.user = this.userVetor[index];
-    this.msg =
-      'CPF: ' +
-      this.user.cpf +
-      '\n' +
-      'CEP: ' +
-      this.user.cep +
-      '\n' +
-      'Cidade: ' +
-      this.user.cidade +
-      '\n' +
-      'Endereço: ' +
-      this.user.endereco +
-      '\n' +
-      'email: ' +
-      this.user.email;
     const alert = await this.alertCtrl.create({
       header: this.user.nome,
-      message: this.msg + ' ',
+      subHeader: 'Informações do usuário:',
+      message: `<ul><li> CPF: ${this.user.cpf} </li><p></p><li> CEP: ${this.user.cep} </li><p></p><li> Cidade: ${this.user.cidade} </li><p></p><li> Endereço: ${this.user.endereco} </li><p></p><li> Email: ${this.user.email} </li></ul>`,
+
       buttons: [
         {
           text: 'Editar',
@@ -113,6 +102,8 @@ export class HomePage {
           text: 'Criar',
           role: 'confirm',
           handler: (data) => {
+            this.adicionaEndereco(data);
+            console.log(data.endereco, data.cidade);
             this.adicionaDados(this.user, data);
           },
         },
@@ -258,10 +249,27 @@ export class HomePage {
 
   async atualizaDados(novosDados: User) {
     novosDados.uid = this.user.uid;
+    this.adicionaEndereco(novosDados);
+    console.log(novosDados.cidade, novosDados.endereco);
     this.fireStore.collection('users').doc(this.user.uid).set(novosDados);
   }
 
   async deletaDados(usuario: User) {
     await this.fireStore.collection('users').doc(usuario.uid).delete();
+  }
+
+  async verificaCep(cep: string) {
+    let enderecoColocado = {};
+    console.log(cep);
+    enderecoColocado = await this.buscaCep.consultaCEP(cep);
+    console.log(enderecoColocado);
+  }
+
+  async adicionaEndereco(data: User) {
+    console.log(data.cep);
+    const enderecoColocado = await this.buscaCep.consultaCEP(data.cep);
+    data.endereco = enderecoColocado.logradouro;
+    data.cidade = enderecoColocado.localidade;
+    console.log(data);
   }
 }
